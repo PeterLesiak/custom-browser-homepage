@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+/* =*=*=*=*=*=*=*=*=*=*=*= General Reset =*=*=*=*=*=*=*=*=*=*=*= */
+:root {
+  --clr-primary: 0, 0%, 100%;
+  --clr-secondary: rgb(245, 245, 245);
+
+  font-family: 'Rubik', sans-serif;
+}
+
+*::before, *, *::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100vw;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+
+  background-image: var(--img-wallpaper);
+  background-size: cover;
+  overflow: hidden;
+}
+
+/* =*=*=*=*=*=*=*=*=*= Application Container =*=*=*=*=*=*=*=*=*= */
+#app-container {
+  position: absolute;
+  width: 1000px;
+  height: 100%;
+  padding: 50px;
+  padding-top: 5%;
+}
+
+#app-container .timer-box {
+  width: 100%;
+  font-size: 5rem;
+  display: flex;
+  justify-content: center;
+
+  font-family: monospace;
+  color: var(--clr-secondary);
+  text-shadow: 2px 2px 2px rgba(black, 0.1);
+  gap: 0.5rem;
+}
+
+#app-container .saved-apps {
+  width: 100%;
+  padding: 50px;
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.saved-apps .app-tile {
+  position: relative;
+  z-index: 100;
+  display: flex;
+  width: 100%;
+  height: 60px;
+  padding: 20px;
+  align-items: center;
+
+  border: 1px solid hsla(var(--clr-primary), 0.6);
+  border-radius: 7.5px;
+  background: hsla(var(--clr-primary), 0.1);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 50px 10px rgba(0, 0, 0, 0.25);
+  opacity: 0.8;
+  transition: all 200ms ease-in;
+}
+.app-tile:hover {
+  filter: brightness(1.2);
+  opacity: 1;
+}
+
+.app-tile .favicon {
+  width: 40px;
+  height: 40px;
+  margin-right: 7%;
+  background-image: var(--_tile-img);
+  background-size: cover;
+}
+.app-tile {
+  text-decoration: none;
+  color: white;
+}
+
+/* =*=*=*=*=*=*=*=*=*=*=*= Design Effect =*=*=*=*=*=*=*=*=*=*=*= */
+#design-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#design-background .star {
+  position: absolute;
+  z-index: 1000;
+
+  font-size: 1rem;
+  color: white;
+  animation-duration: 1500ms;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+@keyframes fall-1 {
+  0% {
+    transform: translate(0px, 0px) rotateX(45deg) rotateY(30deg) rotateZ(0deg) scale(0.25);
+    opacity: 0;
+  }
+  
+  5% {
+    transform: translate(10px, -10px) rotateX(45deg) rotateY(30deg) rotateZ(0deg) scale(1);
+    opacity: 1;
+  }
+  
+  100% {
+    transform: translate(25px, 200px) rotateX(180deg) rotateY(270deg) rotateZ(90deg) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes fall-2 {
+  0% {
+    transform: translate(0px, 0px) rotateX(-20deg) rotateY(10deg) scale(0.25);
+    opacity: 0;
+  }
+  
+  10% {
+    transform: translate(-10px, -5px) rotateX(-20deg) rotateY(10deg) scale(1);
+    opacity: 1;
+  }
+  
+  100% {
+    transform: translate(-10px, 160px) rotateX(-90deg) rotateY(45deg) scale(0.25);
+    opacity: 0;
+  }
+}
+
+@keyframes fall-3 {
+  0% {
+    transform: translate(0px, 0px) rotateX(0deg) rotateY(45deg) scale(0.5);
+    opacity: 0;
+  }
+  
+  15% {
+    transform: translate(7px, 5px) rotateX(0deg) rotateY(45deg) scale(1);
+    opacity: 1;
+  }
+  
+  100% {
+    transform: translate(20px, 120px) rotateX(-180deg) rotateY(-90deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
