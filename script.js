@@ -64,9 +64,9 @@ const canvas = document.querySelector("#screen");
 
 const wallpapers = [
   ["./assets/1.jpg", "92, 74.6%, 53.7%"],
+  ["./assets/4.png", "0, 74.6%, 53.7%"],
   ["./assets/2.jpg", "250.4, 74.6%, 53.7%"],
   ["./assets/3.jpg", "48, 74.6%, 53.7%"],
-  ["./assets/4.png", "0, 74.6%, 53.7%"]
 ];
 
 const context = canvas.getContext("2d");
@@ -79,7 +79,14 @@ function rand(min, max) {
 }
 
 /* =*=*=*=*=*=*=*=*=*=*=*=*=*= Code =*=*=*=*=*=*=*=*=*=*=*=*=*= */
-const designIndex = rand(0, wallpapers.length - 1);
+let designIndex = 0;
+if (sessionStorage.getItem("has_visited?")) {
+  designIndex = rand(0, wallpapers.length - 1);
+} else {
+  designIndex = rand(0, 1);
+  sessionStorage.setItem("has_visited?", true);
+}
+
 document.body.setAttribute(
   "style",
   `--img-wallpaper: url(${wallpapers[designIndex][0]}); --clr-primary: ${wallpapers[designIndex][1]}`
