@@ -1,6 +1,4 @@
 /* =*=*=*=*=*=*=*=*=*=*= Initialization =*=*=*=*=*=*=*=*=*=*= */
-let count = 0;
-let start = new Date().getTime();
 
 // IMPORTANT: always keep the length even
 const APPS = [
@@ -55,65 +53,37 @@ const APPS = [
 ];
 
 /* =*=*=*=*=*=*=*=*=*=*=*= Constants =*=*=*=*=*=*=*=*=*=*=*= */
-const design_background = document.querySelector("#design-background");
-
 const timer_box = document.querySelector(".timer-box");
 const hours = timer_box.querySelector(".hours");
 const minutes = timer_box.querySelector(".minutes");
 const seconds = timer_box.querySelector(".seconds");
 
 const saved_apps = document.querySelector(".saved-apps");
-
-const originPosition = { x: 0, y: 0 };
-
-const last = {
-  starTimestamp: start,
-  starPosition: originPosition,
-  mousePosition: originPosition
-}
-
-const config = {
-  starAnimationDuration: 1500,
-  minimumTimeBetweenStars: 250,
-  minimumDistanceBetweenStars: 75,
-  colors: ["249 146 253", "252 254 255"],
-  sizes: ["1.4rem", "1rem", "0.6rem"],
-  animations: ["fall-1", "fall-2", "fall-3"]
-}
+/** @type{HTMLCanvasElement} */
+const canvas = document.querySelector("#screen");
 
 const wallpapers = [
-  //"./assets/1.jpg",
-  //["./assets/2.jpg", "250.4, 74.6%, 53.7%"],
-  //["./assets/3.jpg", "48, 74.6%, 53.7%"],
+  ["./assets/1.jpg", "92, 74.6%, 53.7%"],
+  ["./assets/2.jpg", "250.4, 74.6%, 53.7%"],
+  ["./assets/3.jpg", "48, 74.6%, 53.7%"],
   ["./assets/4.png", "0, 74.6%, 53.7%"]
 ];
+
+const context = canvas.getContext("2d");
+if (!context) 
+  throw new Error("CanvasRenderingContext2D (somehow) not supported!");
 
 /* =*=*=*=*=*=*=*=*=*= Utility Functions =*=*=*=*=*=*=*=*=*= */
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function selectRandom(items) {
-  return items[rand(0, items.length - 1)];
-}
-
-function calcDistance(a, b) {
-  const diffX = b.x - a.x;
-  const diffY = b.y - a.y;
-  
-  return Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
-}
-
 /* =*=*=*=*=*=*=*=*=*=*=*=*=*= Code =*=*=*=*=*=*=*=*=*=*=*=*=*= */
 const designIndex = rand(0, wallpapers.length - 1);
-if (typeof wallpapers[designIndex] == "string") {
-  document.body.setAttribute("style", `--img-wallpaper: url(${wallpapers[designIndex]})`);
-} else {
-  document.body.setAttribute(
-    "style",
-    `--img-wallpaper: url(${wallpapers[designIndex][0]}); --clr-primary: ${wallpapers[designIndex][1]}`
-  );
-}
+document.body.setAttribute(
+  "style",
+  `--img-wallpaper: url(${wallpapers[designIndex][0]}); --clr-primary: ${wallpapers[designIndex][1]}`
+);
 
 function UpdateTimer() {
   const now = new Date();
@@ -150,44 +120,49 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function createStar(position) {
-  const star = document.createElement("span");
-  const color = selectRandom(config.colors);
-  
-  star.classList.add("star", "fa-solid", "fa-star");
-  
-  star.style.left = `${position.x}px`;
-  star.style.top = `${position.y}px`;
-  star.style.fontSize = selectRandom(config.sizes);
-  star.style.color = `rgb(${color})`;
-  star.style.textShadow = `0px 0px 1.5rem rgb(${color} / 0.5)`;
-  star.style.animationName = config.animations[count++ % 3];
-  star.style.starAnimationDuration = `${config.starAnimationDuration}ms`;
-  
-  design_background.appendChild(star);
+function resizeCanvasToViewport() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-  setTimeout(() => design_background.removeChild(star), config.starAnimationDuration);
+  return [canvas.width, canvas.height];
 }
 
-window.addEventListener("mousemove", e => {
-  const mousePosition = { x: e.clientX, y: e.clientY }
-  
-  if(last.mousePosition.x === 0 && last.mousePosition.y === 0) {
-    last.mousePosition = mousePosition;
-  }
-  
-  const now = new Date().getTime();
-  const hasMovedFarEnough = calcDistance(last.starPosition, mousePosition) >= config.minimumDistanceBetweenStars;
-  const hasBeenLongEnough = now - last.starTimestamp > config.minimumTimeBetweenStars;
-  
-  if(hasMovedFarEnough || hasBeenLongEnough) {
-    createStar(mousePosition);
-    
-    last.starTimestamp = new Date().getTime();
-    last.starPosition = mousePosition;
-  }
-  
-  last.mousePosition = mousePosition;
-});
+function drawCircle(x, y, fill) {
+  context.beginPath()
+  context.arc(x, y, 2, 0, 2 * Math.PI, false)
+  context.fillStyle = fill;
+  context.fill();
+}
 
-document.body.addEventListener("mouseleave", () => last.mousePosition = originPosition);
+const particles = [];
+
+function render() {
+  const [width, height] = resizeCanvasToViewport();
+  context.clearRect(0, 0, width, height);
+
+  if (particles.length == 0) {
+    for (let n = 0; n < 75; n++)
+      particles.push({x: rand(0, width), y: rand(0, height), dir: rand(0, 360), speed: rand(0.5, 3.5)});
+  }
+
+  for (const particle of particles) {
+    drawCircle(particle.x, particle.y, `hsla(${wallpapers[designIndex][1]}, 0.75)`);
+    particle.x += Math.sin(particle.dir) * particle.speed;
+    particle.y += Math.cos(particle.dir) * particle.speed;
+
+    if (particle.x < 0 || particle.x > width) {
+      particle.dir = rand(0, 360);
+      particle.x = particle.x < 0 ? 0 : width;
+      continue;
+    }
+    if (particle.y < 0 || particle.y > height) {
+      particle.dir = rand(0, 360);
+      particle.y = particle.y < 0 ? 0 : height;
+      continue;
+    }
+  }
+
+  requestAnimationFrame( render );
+}
+
+requestAnimationFrame( render );
