@@ -60,7 +60,7 @@ const design_background = document.querySelector("#design-background");
 const timer_box = document.querySelector(".timer-box");
 const hours = timer_box.querySelector(".hours");
 const minutes = timer_box.querySelector(".minutes");
-const secounds = timer_box.querySelector(".secounds");
+const seconds = timer_box.querySelector(".seconds");
 
 const saved_apps = document.querySelector(".saved-apps");
 
@@ -83,8 +83,8 @@ const config = {
 
 const wallpapers = [
   //"./assets/1.jpg",
-  //["./assets/2.jpg", "250.4, 73.1%, 50.4%"],
-  //["./assets/3.jpg", "48, 97%, 75%"],
+  //["./assets/2.jpg", "250.4, 74.6%, 53.7%"],
+  //["./assets/3.jpg", "48, 74.6%, 53.7%"],
   ["./assets/4.png", "0, 74.6%, 53.7%"]
 ];
 
@@ -120,11 +120,11 @@ function UpdateTimer() {
 
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
-  const currentSecound = now.getSeconds();
+  const currentSecond = now.getSeconds();
 
   hours.textContent = (currentHour > 9) ? currentHour : `0${currentHour}`;
   minutes.textContent = (currentMinute > 9) ? currentMinute : `0${currentMinute}`;
-  secounds.textContent = (currentSecound > 9) ? currentSecound : `0${currentSecound}`;
+  seconds.textContent = (currentSecond > 9) ? currentSecond : `0${currentSecond}`;
 }
 
 UpdateTimer();
