@@ -1,11 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
-
 /* =*=*=*=*=*=*=*=*=*=*=*= General Reset =*=*=*=*=*=*=*=*=*=*=*= */
 :root {
   --clr-primary: 0, 0%, 100%;
   --clr-secondary: rgb(245, 245, 245);
 
-  font-family: 'Rubik', sans-serif;
+  font-family: Helvetica, system-ui, sans-serif;
 }
 
 *::before, *, *::after {
